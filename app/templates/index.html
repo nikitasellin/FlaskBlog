@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block title -%}
+  Index page
+{%- endblock %}
+
+{% block body %}
+  <div>
+    <h1>Index page</h1>
+  </div>
+  {% include 'posts_list.html' %}
+{% endblock %}

@@ -1,0 +1,45 @@
+  <div class="container-fluid">
+    <ul>
+      {% for post in posts.items %}
+        <li>
+          <a href="{{ url_for('posts_app.view_post', pk=post.id) }}">
+            {{ post.title -}}
+          </a>
+          Posted on {{ post.post_time }} by {{ post.user.username }}.
+          {% if post.tags %}
+            Tags:
+            {% for tag in post.tags %}
+              <a href="{{ url_for('posts_app.filter_by_tag', tag_text=tag) }}">
+                {{ tag }}
+              </a>
+            {% endfor %}
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+  <!-- Pagination Links-->
+  {% if posts.pages %}
+  <div class="container-fluid text-left">
+    <a href="?page={{posts.next_num}}&q={{q}}" class="btn btn-outline-dark
+       {% if posts.page == 1 %}disabled{% endif %}">&laquo;
+    </a>
+    {% for page_num in posts.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+      {% if page_num %}
+        {% if posts.page == page_num %}
+          <a href="?page={{page_num}}" class="btn btn-dark">{{ page_num }}</a>
+        {% else %}
+          <a href="?page={{page_num}}" class="btn btn-outline-dark">{{ page_num }}</a>
+        {% endif %}
+      {% else %}
+        ...
+      {% endif %}
+    {% endfor %}
+    <a href="?page={{posts.next_num}}" class="btn btn-outline-dark
+      {% if posts.page == posts.pages %}disabled{% endif %}">&raquo;
+    </a>
+    <p class="text-left">
+     Page #{{ posts.page }} of {{ posts.pages }}
+    </p>
+  </div>
+  {% endif %}
