@@ -24,14 +24,18 @@ def view_post(pk):
 @posts_app.route('/add', methods=('GET', 'POST'), endpoint='add_post')
 @login_required
 def add_post():
-    form = AddPostForm(request.form)
+    form = AddPostForm()
     form.tags.choices = Tag.get_tags_for_form()
     if form.validate_on_submit():
         # Assuming POST method
         title = request.form.get('title')
         text = request.form.get('text')
+        image = request.files['image']
         new_post = Post(
-            title=title, text=text, author_id=current_user.id)
+            title=title,
+            text=text,
+            author_id=current_user.id,
+            image=image)
         db.session.add(new_post)
         tags = form.tags.data
         if tags:

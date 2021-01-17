@@ -1,12 +1,13 @@
 from datetime import datetime
 
+from flask_image_alchemy.fields import StdImageField
 from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
 from werkzeug.exceptions import NotFound
 
 from .database import db
 from .user import User
-from config import initial_tags
+from config import initial_tags, storage
 
 posts_to_tags = db.Table(
     'posts_to_tags',
@@ -27,6 +28,15 @@ class Post(db.Model):
         nullable=False,
         default=datetime.now())
     author_id = Column(Integer, ForeignKey(User.id), nullable=False)
+    image = Column(StdImageField(
+        storage=storage,
+        variations={
+                'thumbnail': {
+                    "width": 200,
+                    "height": 200,
+                    "crop": True
+                }
+        }), nullable=True)
     tags = relationship('Tag', secondary=posts_to_tags)
 
     user = relationship(User, back_populates='posts')

@@ -1,6 +1,9 @@
+import os
+
 from flask import Flask, render_template, url_for, request
 from flask_login import LoginManager
 from flask_migrate import Migrate
+from flask_uploads import UploadSet, configure_uploads, IMAGES
 from werkzeug.utils import redirect
 
 import config
@@ -12,13 +15,25 @@ from views.posts import posts_app
 
 app = Flask(__name__)
 
+media_path = os.path.join(os.getcwd(), config.MEDIA_PATH)
+
 app.config.update(
     SQLALCHEMY_DATABASE_URI=config.SQLALCHEMY_DATABASE_URI,
     SQLALCHEMY_TRACK_MODIFICATIONS=True,
-    SECRET_KEY=config.SECRET_KEY
+    SECRET_KEY=config.SECRET_KEY,
+    UPLOADED_IMAGES_DEST=media_path,
+    MEDIA_PATH=media_path
 )
+
 db.init_app(app)
 Migrate(app, db, compare_type=True)
+
+storage = config.storage
+print()
+storage.init_app(app)
+
+images = UploadSet('images', IMAGES)
+configure_uploads(app, images)
 
 login_manager = LoginManager()
 login_manager.init_app(app)

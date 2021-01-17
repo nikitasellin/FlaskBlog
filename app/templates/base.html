@@ -13,32 +13,37 @@
 </head>
 <body>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">Blog</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav">
-        <li class="nav-item active">
-          <a class="nav-link" href="{{ url_for('index') }}">Posts list <span class="sr-only">(current)</span></a>
+    <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item {% if request.endpoint =='index' %}active{% endif %}">
+          <a class="nav-link" href="{{ url_for('index') }}">Posts list</a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item {% if request.endpoint =='posts_app.add_post' %}active{% endif %}">
           <a class="nav-link" href="{{ url_for('posts_app.add_post') }}">Add new post</a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item {% if request.endpoint =='posts_app.search_posts' %}active{% endif %}">
           <a class="nav-link" href="{{ url_for('posts_app.search_posts') }}">Search</a>
         </li>
         {% if current_user.is_authenticated %}
-          <li class="nav-item">
-            <a class="nav-link" href="{{ url_for('users_app.index') }}">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{{ url_for('users_app.logout') }}">Logout</a>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Hi, {{ current_user.username }}!
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="{{ url_for('users_app.index') }}">Your posts</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="{{ url_for('users_app.logout') }}">Logout</a>
+            </div>
           </li>
         {% else %}
-          <li class="nav-item">
+          <li class="nav-item {% if request.endpoint =='users_app.signup' %}active{% endif %}">
             <a class="nav-link" href="{{ url_for('users_app.signup') }}">Sign up</a>
           </li>
-          <li class="nav-item">
+          <li class="nav-item {% if request.endpoint =='users_app.login' %}active{% endif %}">
             <a class="nav-link" href="{{ url_for('users_app.login') }}">Login</a>
           </li>
         {% endif %}

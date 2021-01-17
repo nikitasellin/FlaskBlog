@@ -4,6 +4,8 @@ Flask-Migrate==2.5.3
 Flask-Login==0.5.0
 Flask-WTF==0.14.3
 psycopg2-binary==2.8.6
+Flask-ImageAlchemy==0.0.7
+Flask-Reuploaded==0.4.0
 
 # dependencies
 click==7.1.2
@@ -18,3 +20,9 @@ python-dateutil==2.8.1
 python-editor==1.0.4
 six==1.15.0
 WTForms==2.3.3
+boto3==1.16.56
+botocore==1.19.56
+jmespath==0.10.0
+s3transfer==0.3.4
+urllib3==1.26.2
+Wand==0.6.5
