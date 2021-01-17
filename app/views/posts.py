@@ -1,12 +1,16 @@
+from logging import getLogger
+
 from flask import Blueprint, request, render_template, url_for
 from flask_login import login_required, current_user
-from werkzeug.exceptions import NotFound
+from werkzeug.exceptions import NotFound, InternalServerError
 from werkzeug.utils import redirect
 
 import config
 from models.post import Post, Tag
 from models.database import db
 from forms.post import AddPostForm, SearchPostsForm
+
+logger = getLogger(__name__)
 
 posts_app = Blueprint('posts_app', __name__)
 
@@ -34,7 +38,12 @@ def add_post():
             for tag_id in tags:
                 tag = Tag.get_tag_by_id(tag_id)
                 new_post.tags.append(tag)
-        db.session.commit()
+        try:
+            db.session.commit()
+        except Exception as e:
+            logger.exception('Could not add new post.')
+            raise InternalServerError(f'Could not add new post: {e}')
+
         return redirect(url_for('posts_app.view_post', pk=new_post.id))
     return render_template('posts/add_post.html', form=form)
 
@@ -53,7 +62,8 @@ def search_posts():
 @posts_app.route('/search/<q>', methods=('GET',), endpoint='search_results')
 def search_results(q):
     page = request.args.get('page', 1, type=int)
-    posts = Post.search(q)
+    posts = Post.search(q).order_by(
+        Post.post_time.desc())
     return render_template(
         'posts/search_results.html',
         posts=posts.paginate(
@@ -69,7 +79,7 @@ def filter_by_tag(tag_text):
         raise NotFound(f'No such tag!')
     query = (
         db.session.query(Post).join(Post.tags).filter(Tag.text == tag_text)
-    )
+    ).order_by(Post.post_time.desc())
     posts = query.paginate(
         page=page, per_page=config.POSTS_PER_PAGE
     )

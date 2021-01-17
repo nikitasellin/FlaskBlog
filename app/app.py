@@ -40,7 +40,10 @@ def unauthorized_callback():
 @app.route('/', methods=('GET',), endpoint='index')
 def index():
     page = request.args.get('page', 1, type=int)
-    posts = Post.query.paginate(page=page, per_page=config.POSTS_PER_PAGE)
+    posts = Post.query.order_by(
+        Post.post_time.desc()).paginate(
+        page=page, per_page=config.POSTS_PER_PAGE
+    )
     return render_template('index.html', posts=posts)
 
 

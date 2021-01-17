@@ -2,7 +2,7 @@ from logging import getLogger
 
 from flask import render_template, request, url_for, Blueprint
 from flask_login import current_user, login_user, login_required, logout_user
-from werkzeug.exceptions import InternalServerError, BadRequest
+from werkzeug.exceptions import InternalServerError
 from werkzeug.utils import redirect
 
 import config
@@ -21,7 +21,8 @@ users_app = Blueprint('users_app', __name__)
 def index():
     page = request.args.get('page', 1, type=int)
     posts = Post.query.filter_by(
-        user=current_user).paginate(
+        user=current_user).order_by(
+        Post.post_time.desc()).paginate(
         page=page, per_page=config.POSTS_PER_PAGE)
     return render_template(
         'users/index.html',

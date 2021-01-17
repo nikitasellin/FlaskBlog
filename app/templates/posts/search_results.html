@@ -5,14 +5,11 @@
 {%- endblock %}
 
 {% block body %}
-  <div class="container-fluid">
-    <h1>Search results:</h1>
-  </div>
+  <h1 class="text-center">Search results:</h1>
+  <hr>
   {% if posts %}
     {% include 'posts_list.html' %}
   {% else %}
-    <div class="container-fluid">
-      <h3>Nothing found!</h3>
-    </div>
+    <h3>Nothing found!</h3>
   {% endif %}
 {% endblock %}

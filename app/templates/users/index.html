@@ -5,14 +5,14 @@
 {%- endblock %}
 
 {% block body %}
-  <div class="container-fluid">
-    <h1>Hi, {{ user }}.</h1>
-  </div>
+  <h1 class="text-center">Hi, {{ user }}!</h1>
   {% if posts.items %}
+    <h3>Your posts:</h3>
+    <hr>
     {% include 'posts_list.html' %}
   {% else %}
-    <div class="container-fluid">
-      <h3>You haven't posted anything yet!</h3>
-    </div>
+    <h3>You haven't posted anything yet.</h3>
+    <hr>
+    You can <a href="{{ url_for('posts_app.add_post') }}">add new post</a>  now.
   {% endif %}
 {% endblock %}
