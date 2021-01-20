@@ -15,21 +15,18 @@ from views.posts import posts_app
 
 app = Flask(__name__)
 
-media_path = os.path.join(os.getcwd(), config.MEDIA_PATH)
-
 app.config.update(
     SQLALCHEMY_DATABASE_URI=config.SQLALCHEMY_DATABASE_URI,
     SQLALCHEMY_TRACK_MODIFICATIONS=True,
     SECRET_KEY=config.SECRET_KEY,
-    UPLOADED_IMAGES_DEST=media_path,
-    MEDIA_PATH=media_path
+    UPLOADED_IMAGES_DEST=config.MEDIA_PATH,
+    MEDIA_PATH=config.MEDIA_PATH
 )
 
 db.init_app(app)
 Migrate(app, db, compare_type=True)
 
 storage = config.storage
-print()
 storage.init_app(app)
 
 images = UploadSet('images', IMAGES)
