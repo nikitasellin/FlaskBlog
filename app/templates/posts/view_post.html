@@ -1,13 +1,45 @@
 {% extends 'base.html' %}
 
 {% block title -%}
-  Index page
+  {{ post.title }}
 {%- endblock %}
 
 {% block body %}
-  <div>
-    <h1>{{ post.title }} (author - {{ post.user.username }})</h1>
-    {{ post.text }}
-    {{ post.post_time }}
+  <div class="container">
+    <h1>{{ post.title }}</h1>
+    <hr>
+    <div class="row">
+      <div class="col-md-3">
+        {% if post.image %}
+          <img src="/{{ post.image.thumbnail.url }}" alt="Post's image" class="rounded mx-auto d-block">
+        {% else %}
+          <img src="/media/default_thumbnail.png" alt="Default image" class="rounded mx-auto d-block">
+        {% endif %}
+      </div>
+      <div class="col-md-9 text-left">
+        <p>
+          Posted on {{ post.post_time.strftime('%d %B %Y') }} by <b>{{ post.user.username }}</b>.
+          <br>
+          {% if post.tags %}
+            Tags:
+            {% for tag in post.tags %}
+              <a href="{{ url_for('posts_app.filter_by_tag', tag_text=tag) }}">
+                {{ tag }}
+              </a>
+            {% endfor %}
+          {% else %}
+            No tags.
+          {% endif %}
+      </div>
+    </div>
+    <hr>
+    <div class="row">
+      <div class="col-md-12">
+        <p>
+          {{ post.text|safe }}
+        </p>
+      </div>
+    </div>
+    <hr>
   </div>
 {% endblock %}
