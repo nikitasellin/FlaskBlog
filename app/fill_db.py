@@ -24,6 +24,7 @@ def create_users(db_session):
                 db_session.commit()
             except Exception as e:
                 logger.exception(f'Could not create new user: {e}')
+        logger.info('Users added successfully')
         return
     logger.error('Users were already added!')
 
@@ -37,6 +38,7 @@ def create_tags(db_session):
                 db_session.commit()
             except Exception as e:
                 logger.exception(f'Could not create new tags: {e}')
+        logger.info('Tags added successfully')
         return
     logger.error('Tags were already added!')
 
@@ -45,7 +47,7 @@ def create_posts(db_session):
     if db_session.query(Post).all():
         logger.error('Posts were already added!')
         return
-    with open('posts.json') as file:
+    with open(config.initial_posts_file) as file:
         content = json.loads(file.read())
     for item in content:
         user = db_session.query(User).filter_by(
@@ -70,6 +72,7 @@ def create_posts(db_session):
             db_session.commit()
         except Exception as e:
             logger.exception(f'Could not create new post: {e}')
+    logger.info('Posts added successfully')
 
 
 if __name__ == '__main__':

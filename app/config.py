@@ -16,6 +16,11 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # Pagination settings
 POSTS_PER_PAGE = 5
 
+# Media storage settings
+MEDIA_PATH = 'media/'
+MAX_IMAGE_SIZE = 1024 * 1024
+storage = FileStorage()
+
 # Initial users
 user1 = {
     'username': 'Soupmaker',
@@ -26,9 +31,5 @@ user2 = {
 initial_users = (user1, user2)
 # Initial tags
 initial_tags = ('Soups', 'Main dishes', 'Hot meals', 'Salads', 'Cold meals')
-
-
-# Media storage settings
-MEDIA_PATH = 'media/'
-MAX_IMAGE_SIZE = 1024 * 1024
-storage = FileStorage()
+# Initial posts
+initial_posts_file = 'posts.json'
