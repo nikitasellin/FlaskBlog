@@ -7,7 +7,7 @@ from werkzeug.exceptions import NotFound
 
 from .database import db
 from .user import User
-from config import initial_tags, storage
+from config import storage
 
 posts_to_tags = db.Table(
     'posts_to_tags',
@@ -71,7 +71,7 @@ class Tag(db.Model):
     def get_tags_for_form(cls):
         tags = cls.query.all()
         if not tags:
-            tags = cls.add_initial_tags()
+            return []
         tags_list = []
         for tag in tags:
             tags_list.append((tag.id, tag.text))
@@ -86,14 +86,6 @@ class Tag(db.Model):
     def get_tag_by_text(cls, text):
         tag = cls.query.filter_by(text=text).one_or_none()
         return tag
-
-    @classmethod
-    def add_initial_tags(cls):
-        for tag_text in initial_tags:
-            tag = cls(text=tag_text)
-            db.session.add(tag)
-        db.session.commit()
-        return cls.query.all()
 
     def __repr__(self):
         return self.text

@@ -16,9 +16,17 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # Pagination settings
 POSTS_PER_PAGE = 5
 
-# Default tags
-# @TODO! Refactor adding tags to DB.
-initial_tags = ('Tag1', 'Tag2', 'Tag3')
+# Initial users
+user1 = {
+    'username': 'Soupmaker',
+    'password': '123456'}
+user2 = {
+    'username': 'Grillmaker',
+    'password': '123456'}
+initial_users = (user1, user2)
+# Initial tags
+initial_tags = ('Soups', 'Main dishes', 'Hot meals', 'Salads', 'Cold meals')
+
 
 # Media storage settings
 MEDIA_PATH = 'media/'

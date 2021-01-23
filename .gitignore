@@ -129,5 +129,5 @@ dmypy.json
 .pyre/
 
 # Custom settings
-media/*.jpg
-media/*.jpeg
+*.jpg
+*.jpeg

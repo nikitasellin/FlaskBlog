@@ -1,5 +1,3 @@
-import os
-
 from flask import Flask, render_template, url_for, request
 from flask_login import LoginManager
 from flask_migrate import Migrate
