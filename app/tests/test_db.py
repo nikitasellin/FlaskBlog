@@ -1,6 +1,4 @@
-import json
-
-from pytest import fixture
+from pytest import fixture, mark
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
@@ -9,18 +7,6 @@ from models.user import User
 from models.post import Tag, Post
 
 SQLALCHEMY_DATABASE_URI = config.SQLALCHEMY_DATABASE_URI
-
-'''
-6. Выбрать все посты конкретного пользователя, попробовать сделать другие запросы 
-(Рекомендуется сделать это в виде тестов pytest, можно просто с помощью print)
-'''
-
-
-@fixture(scope='module')
-def initial_posts_dict():
-    with open(config.initial_posts_file) as file:
-        content = json.loads(file.read())
-    return content
 
 
 @fixture(scope='module')
@@ -45,7 +31,26 @@ class TestModels:
         for tag in tags:
             assert tag.text in config.initial_tags
 
-    def test_true(self, initial_posts_dict, session):
-        for item in initial_posts_dict:
-            for key in item.keys():
-                assert key == key
+    @mark.parametrize(
+        'username,expected_posts_count,expected_post_title',
+        [
+            ('Soupmaker', 1, 'Amazing borscht recipe.'),
+            ('Grillmaker', 1, 'Impossible grilled steak.'),
+        ])
+    def test_users_post(self, username, expected_posts_count, expected_post_title, session):
+        user = session.query(User).filter_by(username=username).one_or_none()
+        assert len(user.posts) == expected_posts_count
+        for post in user.posts:
+            assert post.title == expected_post_title
+
+    @mark.parametrize(
+        'post_title,expected_tags',
+        [
+            ('Amazing borscht recipe.', ['Soups', 'Hot meals']),
+            ('Impossible grilled steak.', ['Main dishes', 'Hot meals']),
+        ])
+    def test_post_tags(self, post_title, expected_tags, session):
+        post = session.query(Post).filter_by(title=post_title).one_or_none()
+        assert post.tags is not None
+        tags = [tag.text for tag in post.tags]
+        assert tags == expected_tags
