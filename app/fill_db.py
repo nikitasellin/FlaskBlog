@@ -13,34 +13,34 @@ logger = getLogger(__name__)
 
 
 def create_users(db_session):
-    if not db_session.query(User).all():
-        for initial_user in config.initial_users:
-            user = User(
-                username=initial_user['username'],
-                password=initial_user['password']
-            )
-            db_session.add(user)
-            try:
-                db_session.commit()
-            except Exception as e:
-                logger.exception(f'Could not create new user: {e}')
-        logger.info('Users added successfully')
+    if db_session.query(User).all():
+        logger.error('Users were already added!')
         return
-    logger.error('Users were already added!')
+    for initial_user in config.initial_users:
+        user = User(
+            username=initial_user['username'],
+            password=initial_user['password']
+        )
+        db_session.add(user)
+        try:
+            db_session.commit()
+        except Exception as e:
+            logger.exception(f'Could not create new user: {e}')
+    logger.info('Users added successfully')
 
 
 def create_tags(db_session):
-    if not db_session.query(Tag).all():
-        for tag_text in config.initial_tags:
-            tag = Tag(text=tag_text)
-            db_session.add(tag)
-            try:
-                db_session.commit()
-            except Exception as e:
-                logger.exception(f'Could not create new tags: {e}')
-        logger.info('Tags added successfully')
+    if db_session.query(Tag).all():
+        logger.error('Tags were already added!')
         return
-    logger.error('Tags were already added!')
+    for tag_text in config.initial_tags:
+        tag = Tag(text=tag_text)
+        db_session.add(tag)
+        try:
+            db_session.commit()
+        except Exception as e:
+            logger.exception(f'Could not create new tags: {e}')
+    logger.info('Tags added successfully')
 
 
 def create_posts(db_session):

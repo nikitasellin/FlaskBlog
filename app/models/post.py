@@ -56,6 +56,11 @@ class Post(db.Model):
         )
         return posts
 
+    def add_tags_by_id(self, tag_ids: list):
+        for tag_id in tag_ids:
+            tag = Tag.get_tag_by_id(tag_id)
+            self.tags.append(tag)
+
     def __repr__(self):
         return f'<Post #{self.title} {self.text} {self.user}>'
 

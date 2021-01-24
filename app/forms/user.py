@@ -36,4 +36,5 @@ class SignUpForm(FlaskForm):
     def validate_username(self, field):
         user = get_user(field.data)
         if user:
-            raise ValidationError(f'User with username {field.data!r} already exists!')
+            raise ValidationError(
+                f'User with username {field.data!r} already exists!')

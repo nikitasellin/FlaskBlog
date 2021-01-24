@@ -37,11 +37,9 @@ def add_post():
             author_id=current_user.id,
             image=image)
         db.session.add(new_post)
-        tags = form.tags.data
-        if tags:
-            for tag_id in tags:
-                tag = Tag.get_tag_by_id(tag_id)
-                new_post.tags.append(tag)
+        tag_ids = form.tags.data
+        if tag_ids:
+            new_post.add_tags_by_id(tag_ids)
         try:
             db.session.commit()
         except Exception as e:
@@ -55,7 +53,6 @@ def add_post():
 @posts_app.route('/search', methods=('GET', 'POST'), endpoint='search_posts')
 def search_posts():
     form = SearchPostsForm(request.form)
-    page = request.args.get('page', 1, type=int)
     if form.validate_on_submit():
         # Assuming POST method
         text = request.form.get('text')
@@ -75,12 +72,13 @@ def search_results(q):
         )
 
 
-@posts_app.route('/tags/<tag_text>', methods=('GET',), endpoint='filter_by_tag')
+@posts_app.route(
+    '/tags/<tag_text>', methods=('GET',), endpoint='filter_by_tag')
 def filter_by_tag(tag_text):
     page = request.args.get('page', 1, type=int)
     tag = Tag.get_tag_by_text(tag_text)
     if not tag:
-        raise NotFound(f'No such tag!')
+        raise NotFound('No such tag!')
     query = (
         db.session.query(Post).join(Post.tags).filter(Tag.text == tag_text)
     ).order_by(Post.post_time.desc())

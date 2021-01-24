@@ -69,7 +69,8 @@ def login():
     if form.validate_on_submit():
         # Assuming POST method
         username, password = get_credentials_from_form(request.form)
-        user = db.session.query(User).filter_by(username=username).one_or_none()
+        user = db.session.query(User).filter_by(
+            username=username).one_or_none()
         login_user(user)
         next_page = request.args.get('next', '')
         if next_page:
